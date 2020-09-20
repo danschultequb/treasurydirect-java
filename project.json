@@ -1,13 +1,13 @@
 {
   "publisher": "qub",
-  "project": "treasuryDirect-java",
+  "project": "treasurydirect-java",
   "version": "1",
   "java": {
     "dependencies": [
       {
         "publisher": "qub",
-        "project": "lib-java",
-        "version": "76"
+        "project": "http-java",
+        "version": "12"
       }
     ]
   }
