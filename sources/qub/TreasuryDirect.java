@@ -48,4 +48,6 @@ public interface TreasuryDirect
     Result<Iterable<TreasuryDirectSecurity>> getAuctionedSecurities(GetAuctionedSecuritiesOptions options);
 
     Result<Iterable<TreasuryDirectSecurity>> getSecuritiesByType(TreasuryDirectSecurityType type);
+
+    Result<Iterable<TreasuryDirectSecurity>> searchSecurities(SearchSecuritiesOptions options);
 }

@@ -184,4 +184,34 @@ public class RealTreasuryDirect implements TreasuryDirect
             return result;
         });
     }
+
+    @Override
+    public Result<Iterable<TreasuryDirectSecurity>> searchSecurities(SearchSecuritiesOptions options)
+    {
+        PreCondition.assertNotNull(options, "options");
+
+        return Result.create(() ->
+        {
+            final URL url = URL.parse(this.baseUrl + "securities/search").await();
+            url.setQueryParameter("format", "json");
+
+            for (final MapEntry<String,String> option : options)
+            {
+                url.setQueryParameter(option.getKey(), option.getValue());
+            }
+
+            final Iterable<TreasuryDirectSecurity> result;
+            try (final HttpResponse response = this.httpClient.get(url).await())
+            {
+                final JSONArray responseBodyArray = JSON.parseArray(response.getBody()).await();
+                result = responseBodyArray
+                    .instanceOf(JSONObject.class)
+                    .map(MutableTreasuryDirectSecurity::create);
+            }
+
+            PostCondition.assertNotNull(result, "result");
+
+            return result;
+        });
+    }
 }

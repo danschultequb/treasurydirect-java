@@ -401,9 +401,6 @@ public interface TreasuryDirectTests
                         final DateTime maturityDate = security.getMaturityDate().await();
                         test.assertNotNull(maturityDate);
 
-                        final double interestRate = security.getInterestRate().await();
-                        test.assertGreaterThanOrEqualTo(interestRate, 0);
-
                         final DateTime auctionDate = security.getAuctionDate().await();
                         test.assertNotNull(auctionDate);
 
@@ -609,9 +606,6 @@ public interface TreasuryDirectTests
                         final DateTime maturityDate = security.getMaturityDate().await();
                         test.assertNotNull(maturityDate);
 
-                        final double interestRate = security.getInterestRate().await();
-                        test.assertGreaterThanOrEqualTo(interestRate, 0);
-
                         final DateTime auctionDate = security.getAuctionDate().await();
                         test.assertNotNull(auctionDate);
 
@@ -646,9 +640,6 @@ public interface TreasuryDirectTests
                         final DateTime maturityDate = security.getMaturityDate().await();
                         test.assertNotNull(maturityDate);
 
-                        final double interestRate = security.getInterestRate().await();
-                        test.assertGreaterThanOrEqualTo(interestRate, 0);
-
                         final DateTime auctionDate = security.getAuctionDate().await();
                         test.assertNotNull(auctionDate);
 
@@ -682,9 +673,6 @@ public interface TreasuryDirectTests
 
                         final DateTime maturityDate = security.getMaturityDate().await();
                         test.assertNotNull(maturityDate);
-
-                        final double interestRate = security.getInterestRate().await();
-                        test.assertGreaterThanOrEqualTo(interestRate, 0);
 
                         final DateTime auctionDate = security.getAuctionDate().await();
                         test.assertNotNull(auctionDate);
@@ -749,6 +737,87 @@ public interface TreasuryDirectTests
                         }
                     });
                 }
+            });
+
+            runner.testGroup("searchSecurities(SearchSecuritiesOptions)", () ->
+            {
+                runner.test("with null options", (Test test) ->
+                {
+                    final TreasuryDirect treasuryDirect = creator.run(test);
+                    final SearchSecuritiesOptions options = null;
+                    test.assertThrows(() -> treasuryDirect.searchSecurities(options),
+                        new PreConditionFailure("options cannot be null."));
+                });
+
+                runner.test("with empty options", (Test test) ->
+                {
+                    final TreasuryDirect treasuryDirect = creator.run(test);
+                    final SearchSecuritiesOptions options = SearchSecuritiesOptions.create();
+                    final Iterable<TreasuryDirectSecurity> matchingSecurities = treasuryDirect.searchSecurities(options).await();
+                    test.assertNotNull(matchingSecurities);
+                    test.assertGreaterThanOrEqualTo(matchingSecurities.getCount(), 1);
+                    for (final TreasuryDirectSecurity security : matchingSecurities)
+                    {
+                        test.assertNotNull(security);
+
+                        final String cusip = security.getCusip().await();
+                        test.assertNotNullAndNotEmpty(cusip);
+
+                        final DateTime issueDate = security.getIssueDate().await();
+                        test.assertNotNull(issueDate);
+
+                        final String securityType = security.getSecurityType().await();
+                        test.assertNotNullAndNotEmpty(securityType);
+
+                        final String securityTerm = security.getSecurityTerm().await();
+                        test.assertNotNullAndNotEmpty(securityTerm);
+
+                        final DateTime maturityDate = security.getMaturityDate().await();
+                        test.assertNotNull(maturityDate);
+
+                        final DateTime auctionDate = security.getAuctionDate().await();
+                        test.assertNotNull(auctionDate);
+
+                        final double auctionDateYear = security.getAuctionDateYear().await();
+                        test.assertEqual(auctionDate.getYear(), auctionDateYear);
+                    }
+                });
+
+                runner.test("with securityTerm: \"2-Day\"", (Test test) ->
+                {
+                    final TreasuryDirect treasuryDirect = creator.run(test);
+                    final SearchSecuritiesOptions options = SearchSecuritiesOptions.create()
+                        .setSecurityTerm("2-Day");
+                    final Iterable<TreasuryDirectSecurity> matchingSecurities = treasuryDirect.searchSecurities(options).await();
+                    test.assertNotNull(matchingSecurities);
+                    test.assertGreaterThanOrEqualTo(matchingSecurities.getCount(), 1);
+                    for (final TreasuryDirectSecurity security : matchingSecurities)
+                    {
+                        test.assertNotNull(security);
+
+                        final String cusip = security.getCusip().await();
+                        test.assertNotNullAndNotEmpty(cusip);
+
+                        final DateTime issueDate = security.getIssueDate().await();
+                        test.assertNotNull(issueDate);
+
+                        final String securityType = security.getSecurityType().await();
+                        test.assertNotNullAndNotEmpty(securityType);
+
+                        final String securityTerm = security.getSecurityTerm().await();
+                        test.assertNotNullAndNotEmpty(securityTerm);
+                        test.assertEqual("2-Day", securityTerm);
+
+                        final DateTime maturityDate = security.getMaturityDate().await();
+                        test.assertNotNull(maturityDate);
+
+                        final DateTime auctionDate = security.getAuctionDate().await();
+                        test.assertNotNull(auctionDate);
+
+                        final double auctionDateYear = security.getAuctionDateYear().await();
+                        test.assertEqual(auctionDate.getYear(), auctionDateYear);
+                    }
+                });
             });
         });
     }
