@@ -40,8 +40,8 @@ public class RealTreasuryDirect implements TreasuryDirect
 
         return Result.create(() ->
         {
-            final URL url = URL.parse(this.baseUrl + "securities/" + cusip + "/" + issueMonth + "/" + issueDayOfMonth + "/" + issueYear).await();
-            url.setQueryParameter("format", "json");
+            final MutableURL url = URL.parse(this.baseUrl + "securities/" + cusip + "/" + issueMonth + "/" + issueDayOfMonth + "/" + issueYear).await()
+                .setQueryParameter("format", "json");
 
             TreasuryDirectSecurity result;
             try (final HttpResponse response = this.httpClient.get(url).await())
@@ -69,8 +69,8 @@ public class RealTreasuryDirect implements TreasuryDirect
 
         return Result.create(() ->
         {
-            final URL url = URL.parse(this.baseUrl + "securities/announced").await();
-            url.setQueryParameter("format", "json");
+            final MutableURL url = URL.parse(this.baseUrl + "securities/announced").await()
+                .setQueryParameter("format", "json");
 
             final Integer pageSize = options.getPageSize();
             if (pageSize != null)
@@ -118,8 +118,8 @@ public class RealTreasuryDirect implements TreasuryDirect
 
         return Result.create(() ->
         {
-            final URL url = URL.parse(this.baseUrl + "securities/auctioned").await();
-            url.setQueryParameter("format", "json");
+            final MutableURL url = URL.parse(this.baseUrl + "securities/auctioned").await()
+                .setQueryParameter("format", "json");
 
             final Integer pageSize = options.getPageSize();
             if (pageSize != null)
@@ -167,8 +167,8 @@ public class RealTreasuryDirect implements TreasuryDirect
 
         return Result.create(() ->
         {
-            final URL url = URL.parse(this.baseUrl + "securities/" + type).await();
-            url.setQueryParameter("format", "json");
+            final MutableURL url = URL.parse(this.baseUrl + "securities/" + type).await()
+                .setQueryParameter("format", "json");
 
             final Iterable<TreasuryDirectSecurity> result;
             try (final HttpResponse response = this.httpClient.get(url).await())
@@ -192,8 +192,8 @@ public class RealTreasuryDirect implements TreasuryDirect
 
         return Result.create(() ->
         {
-            final URL url = URL.parse(this.baseUrl + "securities/search").await();
-            url.setQueryParameter("format", "json");
+            final MutableURL url = URL.parse(this.baseUrl + "securities/search").await()
+                .setQueryParameter("format", "json");
 
             for (final MapEntry<String,String> option : options)
             {
